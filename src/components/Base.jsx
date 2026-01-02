@@ -14,7 +14,8 @@ function Base() {
   const [captions, setCaptions] = useState({});
   const fetchSafeRef = useRef(false);
 
-  const MAX_PAGES = 5;
+  const MAX_PAGES = 5; 
+
 
   //fetching logic
   useEffect(() => {
@@ -37,13 +38,15 @@ function Base() {
       });
   }, [query, page]);
 
+  
   return (
     <div className="min-h-screen bg-zinc-100 p-9">
+      
       {photos.length > 0 && page <= 2 && (
         <div className="flex justify-center mt-10">
           <button
             onClick={() => setPage((p) => p + 1)}
-            className="px-8 py-3 rounded-full border border-zinc-400 bg-white hover:bg-zinc-200"
+            className="px-8 py-3 rounded-full border border-zinc-400 bg-white hover:bg-zinc-200 transition"
           >
             Load More
           </button>
@@ -56,6 +59,23 @@ function Base() {
             <span className="animate-spin h-5 w-5 border-2 border-zinc-400 border-t-transparent rounded-full"></span>
             Loading more images…
           </div>
+        </div>
+      )}
+
+      {(page >= MAX_PAGES || photos.length >= 11 ) && (
+        <div className="text-center mt-10 text-zinc-500">
+          — You’ve reached the end (API limit) —
+          <footer className="mt-2">
+            Created by{" "}
+            <a
+              href="https://web-portfolio-piyush.vercel.app/"
+              className="text-2xl text-orange-600"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Piyush
+            </a>
+          </footer>
         </div>
       )}
     </div>
