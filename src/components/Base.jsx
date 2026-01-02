@@ -38,10 +38,32 @@ function Base() {
       });
   }, [query, page]);
 
-  
+  //infinite scroll logic
+  useEffect(() => {
+    const onScroll = () => {
+      if (fetchSafeRef.current || loading) return;
+
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 250;
+
+      if (nearBottom && page < MAX_PAGES) {
+        fetchSafeRef.current = true;
+        setPage((p) => p + 1);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [loading, page]);
+
+  if (error) return <h1 className="text-center text-red-500">{error}</h1>;
+
   return (
     <div className="min-h-screen bg-zinc-100 p-9">
-      
+      <SearchBar input={input} setInput={setInput} onSearch={debouncedSearch} />
+
+      <PhotoGrid photos={photos} captions={captions} />
+
       {photos.length > 0 && page <= 2 && (
         <div className="flex justify-center mt-10">
           <button
