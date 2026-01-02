@@ -1,19 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import { searchPhotosPix } from "../utils/mediaFetch";
 import { handleAI } from "../utils/handleAI";
+import SearchBar from "./SearchBar";
+import PhotoGrid from "./PhotoGrid";
 
 function Base() {
+  const [input, setInput] = useState("");
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState([]);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [captions, setCaptions] = useState({});
+  const fetchSafeRef = useRef(false);
 
+  const MAX_PAGES = 5;
+
+  //fetching logic
   useEffect(() => {
     if (!query) return;
     setLoading(true);
 
+    //deduplication avoid logic
     searchPhotosPix(query, page)
       .then((res) => {
         setPhotos((prev) => {
+          const seen = new Set(prev.map((p) => p.id));
+          const unique = res.filter((p) => !seen.has(p.id));
           return page === 1 ? unique : [...prev, ...unique];
         });
       })
@@ -26,17 +39,25 @@ function Base() {
 
   return (
     <div className="min-h-screen bg-zinc-100 p-9">
-      {photos.length >
-        0(
-          <div className="flex justify-center mt-10">
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              className="px-8 py-3 rounded-full "
-            >
-              Load More
-            </button>
+      {photos.length > 0 && page <= 2 && (
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            className="px-8 py-3 rounded-full border border-zinc-400 bg-white hover:bg-zinc-200"
+          >
+            Load More
+          </button>
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex justify-center mt-10">
+          <div className="flex items-center gap-2 text-zinc-500">
+            <span className="animate-spin h-5 w-5 border-2 border-zinc-400 border-t-transparent rounded-full"></span>
+            Loading more images…
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }
