@@ -11,10 +11,25 @@ function Base() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [captions, setCaptions] = useState({});
   const fetchSafeRef = useRef(false);
 
   const MAX_PAGES = 5; 
+
+  //Debounce logic
+  function debounce(fn, delay) {
+    let timer;
+    return (value) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(value), delay);
+    };
+  }
+
+  const debouncedSearch = useRef(
+    debounce((value) => {
+      setPage(1);
+      setQuery(value);
+    }, 600)
+  ).current;
 
 
   //fetching logic
