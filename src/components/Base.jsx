@@ -11,6 +11,7 @@ function Base() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [captions, setCaptions] = useState({});
   const fetchSafeRef = useRef(false);
 
   const MAX_PAGES = 5; 
@@ -31,6 +32,15 @@ function Base() {
     }, 600)
   ).current;
 
+  //Ai caption logic
+  useEffect(() => {
+    photos.forEach((p) => {
+      if (captions[p.id]) return;
+      handleAI(p.tags).then((text) => {
+        setCaptions((prev) => ({ ...prev, [p.id]: text }));
+      });
+    });
+  }, [photos]);
 
   //fetching logic
   useEffect(() => {
