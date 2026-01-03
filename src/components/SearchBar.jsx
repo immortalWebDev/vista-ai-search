@@ -39,8 +39,7 @@ function SearchBar({ input, setInput, onSearch }) {
       </div>
 
       <p className="text-xs text-zinc-400 mt-3">
-        Hover on any image few seconds to reveal its AI caption. (It may take
-        some time.)
+         AI captions are generated automatically — you can copy them from below each image.
       </p>
     </div>
   );

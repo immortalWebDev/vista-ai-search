@@ -1,6 +1,6 @@
 export async function searchPhotosPix(query, page = 1, per_page = 4) {
 
-  console.log("pixabay req sent..");
+//   console.log("pixabay req sent..");
   
   let API = import.meta.env.VITE_PIXABAY_KEY
   const params = new URLSearchParams({
